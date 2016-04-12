@@ -1,0 +1,74 @@
+ciscoconfparse is a library that you can install.
+
+pip install ciscoconfparse
+
+Cisco Heirarchy, space-based indentation in its configuration, and this program establishes a parent-child
+relationship based on the heirarchy.
+
+>>> from ciscoconfparse import CiscoConfParse
+>>>
+>>> cisco_cfg = CiscoConfParse("cisco.txt")
+>>> cisco_cfg
+<CiscoConfParse: 507 lines / syntax: ios / comment delimiter: '!' / factory: False>
+
+>>> intf = cisco_cfg.find_objects(r"^interface")
+[<IOSCfgLine # 71 'interface FastEthernet0'>, <IOSCfgLine # 75 'interface GigabitEthernet0/1'>, <IOSCfgLine # 83 'interface GigabitEthernet0/2'>, <IOSCfgLine # 91 'interface GigabitEthernet0/3'>, <IOSCfgLine # 99 'interface GigabitEthernet0/4'>, <IOSCfgLine # 107 'interface GigabitEthernet0/5'>, <IOSCfgLine # 115 'interface GigabitEthernet0/6'>, <IOSCfgLine # 123 'interface GigabitEthernet0/7'>, <IOSCfgLine # 131 'interface GigabitEthernet0/8'>, <IOSCfgLine # 139 'interface GigabitEthernet0/9'>, <IOSCfgLine # 147 'interface GigabitEthernet0/10'>, <IOSCfgLine # 155 'interface GigabitEthernet0/11'>, <IOSCfgLine # 163 'interface GigabitEthernet0/12'>, <IOSCfgLine # 171 'interface GigabitEthernet0/13'>, <IOSCfgLine # 179 'interface GigabitEthernet0/14'>, <IOSCfgLine # 187 'interface GigabitEthernet0/15'>, <IOSCfgLine # 195 'interface GigabitEthernet0/16'>, <IOSCfgLine # 203 'interface GigabitEthernet0/17'>, <IOSCfgLine # 211 'interface GigabitEthernet0/18'>, <IOSCfgLine # 219 'interface GigabitEthernet0/19'>, <IOSCfgLine # 227 'interface GigabitEthernet0/20'>, <IOSCfgLine # 235 'interface GigabitEthernet0/21'>, <IOSCfgLine # 243 'interface GigabitEthernet0/22'>, <IOSCfgLine # 251 'interface GigabitEthernet0/23'>, <IOSCfgLine # 259 'interface GigabitEthernet0/24'>, <IOSCfgLine # 267 'interface GigabitEthernet0/25'>, <IOSCfgLine # 275 'interface GigabitEthernet0/26'>, <IOSCfgLine # 283 'interface GigabitEthernet0/27'>, <IOSCfgLine # 291 'interface GigabitEthernet0/28'>, <IOSCfgLine # 299 'interface GigabitEthernet0/29'>, <IOSCfgLine # 307 'interface GigabitEthernet0/30'>, <IOSCfgLine # 315 'interface GigabitEthernet0/31'>, <IOSCfgLine # 323 'interface GigabitEthernet0/32'>, <IOSCfgLine # 330 'interface GigabitEthernet0/33'>, <IOSCfgLine # 338 'interface GigabitEthernet0/34'>, <IOSCfgLine # 345 'interface GigabitEthernet0/35'>, <IOSCfgLine # 353 'interface GigabitEthernet0/36'>, <IOSCfgLine # 360 'interface GigabitEthernet0/37'>, <IOSCfgLine # 368 'interface GigabitEthernet0/38'>, <IOSCfgLine # 375 'interface GigabitEthernet0/39'>, <IOSCfgLine # 383 'interface GigabitEthernet0/40'>, <IOSCfgLine # 390 'interface GigabitEthernet0/41'>, <IOSCfgLine # 398 'interface GigabitEthernet0/42'>, <IOSCfgLine # 405 'interface GigabitEthernet0/43'>, <IOSCfgLine # 413 'interface GigabitEthernet0/44'>, <IOSCfgLine # 420 'interface GigabitEthernet0/45'>, <IOSCfgLine # 428 'interface GigabitEthernet0/46'>, <IOSCfgLine # 436 'interface GigabitEthernet0/47'>, <IOSCfgLine # 444 'interface GigabitEthernet0/48'>, <IOSCfgLine # 450 'interface GigabitEthernet0/49'>, <IOSCfgLine # 453 'interface GigabitEthernet0/50'>, <IOSCfgLine # 459 'interface Vlan1'>, <IOSCfgLine # 463 'interface Vlan110'>]
+
+>>> for i in intf:
+...     print(i.text)
+...  
+... 
+interface FastEthernet0
+interface GigabitEthernet0/1
+interface GigabitEthernet0/2
+interface GigabitEthernet0/3
+interface GigabitEthernet0/4
+
+>>> fa4 = intf[4]
+>>> 
+>>> fa4
+<IOSCfgLine # 99 'interface GigabitEthernet0/4'>
+>>> fa4.children
+[<IOSCfgLine # 100 ' description Room 210' (parent is # 99)>, <IOSCfgLine # 101 ' switchport access vlan 200' (parent is # 99)>, <IOSCfgLine # 102 ' switchport mode access' (parent is # 99)>, <IOSCfgLine # 103 ' switchport port-security violation  restrict' (parent is # 99)>, <IOSCfgLine # 104 ' switchport port-security' (parent is # 99)>, <IOSCfgLine # 105 ' spanning-tree portfast' (parent is # 99)>]
+>>> for child in fa4.children:
+...     print(child.text)
+... 
+ description Room 210
+ switchport access vlan 200
+ switchport mode access
+ switchport port-security violation  restrict
+ switchport port-security
+ spanning-tree portfast
+
+
+IF there are multiple children for the parent, you can use the all_children option, instead of just children.
+
+You can determine if an object is a child or parent of something, which returns boolean values:
+
+child.is_child
+child.is_parent
+
+You can use more complex searching options, like such searching for interface parent with child that has 
+"no ip address":
+
+>>> cisco_cfg.find_objects_w_child(parentspec=r"^interface", childspec=r"no ip address")
+[<IOSCfgLine # 71 'interface FastEthernet0'>, <IOSCfgLine # 459 'interface Vlan1'>]
+
+You can do the opposite with the "wout" option:
+
+>>> cisco_cfg.find_objects_wo_child(parentspec=r"^interface", childspec=r"no ip address")
+[<IOSCfgLine # 75 'interface GigabitEthernet0/1'>, <IOSCfgLine # 83 'interface GigabitEthernet0/2'>, <IOSCfgLine # 91 'interface GigabitEthernet0/3'>, <IOSCfgLine # 99 'interface GigabitEthernet0/4'>, <IOSCfgLine # 107 'interface GigabitEthernet0/5'>, <IOSCfgLine # 115 'interface GigabitEthernet0/6'>, <IOSCfgLine # 123 'interface GigabitEthernet0/7'>, <IOSCfgLine # 131 'interface GigabitEthernet0/8'>, <IOSCfgLine # 139 'interface GigabitEthernet0/9'>, <IOSCfgLine # 147 'interface GigabitEthernet0/10'>, <IOSCfgLine # 155 'interface GigabitEthernet0/11'>, <IOSCfgLine # 163 'interface GigabitEthernet0/12'>, <IOSCfgLine # 171 'interface GigabitEthernet0/13'>, <IOSCfgLine # 179 'interface GigabitEthernet0/14'>, <IOSCfgLine # 187 'interface GigabitEthernet0/15'>, <IOSCfgLine # 195 'interface GigabitEthernet0/16'>, <IOSCfgLine # 203 'interface GigabitEthernet0/17'>, <IOSCfgLine # 211 'interface GigabitEthernet0/18'>, <IOSCfgLine # 219 'interface GigabitEthernet0/19'>, <IOSCfgLine # 227 'interface GigabitEthernet0/20'>, <IOSCfgLine # 235 'interface GigabitEthernet0/21'>, <IOSCfgLine # 243 'interface GigabitEthernet0/22'>, <IOSCfgLine # 251 'interface GigabitEthernet0/23'>, <IOSCfgLine # 259 'interface GigabitEthernet0/24'>, <IOSCfgLine # 267 'interface GigabitEthernet0/25'>, <IOSCfgLine # 275 'interface GigabitEthernet0/26'>, <IOSCfgLine # 283 'interface GigabitEthernet0/27'>, <IOSCfgLine # 291 'interface GigabitEthernet0/28'>, <IOSCfgLine # 299 'interface GigabitEthernet0/29'>, <IOSCfgLine # 307 'interface GigabitEthernet0/30'>, <IOSCfgLine # 315 'interface GigabitEthernet0/31'>, <IOSCfgLine # 323 'interface GigabitEthernet0/32'>, <IOSCfgLine # 330 'interface GigabitEthernet0/33'>, <IOSCfgLine # 338 'interface GigabitEthernet0/34'>, <IOSCfgLine # 345 'interface GigabitEthernet0/35'>, <IOSCfgLine # 353 'interface GigabitEthernet0/36'>, <IOSCfgLine # 360 'interface GigabitEthernet0/37'>, <IOSCfgLine # 368 'interface GigabitEthernet0/38'>, <IOSCfgLine # 375 'interface GigabitEthernet0/39'>, <IOSCfgLine # 383 'interface GigabitEthernet0/40'>, <IOSCfgLine # 390 'interface GigabitEthernet0/41'>, <IOSCfgLine # 398 'interface GigabitEthernet0/42'>, <IOSCfgLine # 405 'interface GigabitEthernet0/43'>, <IOSCfgLine # 413 'interface GigabitEthernet0/44'>, <IOSCfgLine # 420 'interface GigabitEthernet0/45'>, <IOSCfgLine # 428 'interface GigabitEthernet0/46'>, <IOSCfgLine # 436 'interface GigabitEthernet0/47'>, <IOSCfgLine # 444 'interface GigabitEthernet0/48'>, <IOSCfgLine # 450 'interface GigabitEthernet0/49'>, <IOSCfgLine # 453 'interface GigabitEthernet0/50'>, <IOSCfgLine # 463 'interface Vlan110'>]
+
+This can be categorized with other text files that include indentation-based heirarchy's, including files for 
+commands like "show interface" and others used in IOS.
+
+*** SHOULD BE ABLE TO USE THIS WITH ARUBA OS, TOO!!!
+
+int_txt = CiscoConfParse("interface.txt")
+
+main_int = int_txt.find_objects(r'line protocol is")
+
+for i in main_int:
+    print(i.text)
+
+* Shows what interfaces are up and down.

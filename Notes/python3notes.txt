@@ -1,0 +1,51 @@
+# Notes on Using Python3 in Byers Class
+
+ James about 13 hours ago
+
+@Gnome - Yep, string handling is completely different between Python 2 and 3. Python 3 uses Unicode by default for strings. This makes sense - if you have to deal with non-US locales you really need this. That's one of the reasons I'm thinking makes using and/or supporting Python 3 worth while.
+
+Also, if you really want to get into it check out:
+
+    Foundations of Python Network Programming 2nd edition - Python 2 focused
+    Foundations of Python Network Programming 3rd edition - Python 3 focused
+
+Both editions include lots of source code and are available on SafariBooksOnline.
+
+--Jim
+Kirk Byers about 10 hours ago
+
+@James
+
+I recommend just writing some code that supports both Python2 and Python3. This will give a sense of what is required. You can try that in this course (if you want).
+
+Looking through some changes we had to make to support Python3 for Netmiko.
+
+Added the following:
+
+from __future__ import print_function
+from __future__ import unicode_literals
+
+Convert all prints to python3 print() method.
+
+Convert package imports to full path from base of package:
+
+from netmiko.arista.arista_ssh import AristaSSH
+
+Convert reading of data from channel to decode as utf-8:
+
+self.remote_conn.recv(MAX_BUFFER).decode('utf-8', 'ignore')
+
+Put exceptions in this form:
+
+except IOError as e:
+
+For Netmiko I didn't actually have to do any encoding when sending down the SSH channel. I assume Paramiko must be doing something under the hood. When I was playing around with telnetlib and Py3 I did have to do some encoding.
+
+We did have to do encoding when reading from a file:
+
+            with io.open(config_file, encoding='utf-8') as cfg_file:
+
+There were possibly a few other minor items, but these were the main things.
+
+Kirk
+

@@ -1,0 +1,39 @@
+git: Program on your Computer
+github: Repository in Cloud
+
+git clone https://github.com/GnetworkGnome/Tester
+git clone git@github.com:GnetworkGnome/pynet
+
+git add <filename>		Add File to Git Respository
+git commit -m "MESSAGE"		Commit Git with MESSAGE
+
+git push origin master		Push to github
+git pull origin master		Pull from github
+
+git status			Get information about what is going on
+git branch			See what branch you are working on
+git log				View commit history
+
+
+Working in Git Directory:
+find . ~type f
+find . ~type f -ls
+
+git branch <NAME>		Create a new Git Branch
+git checkout <NAME>		Switching to Branch
+
+git add <DIRECTORY NAME>/	Add Directory and Contents to Git
+
+git push origin dev		Pushing "dev" branch to Github
+
+git merge dev			From Master Branch, command merges dev branch into Master.
+
+
+
+
+
+
+
+
+git config --global user.email "cryptichubris@gmail.com"
+git config --global user.name "GnetworkGnome"

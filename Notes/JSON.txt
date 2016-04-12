@@ -1,0 +1,24 @@
+JSON is used in the same manner as YAML.  Arista API and other systems use JSON.
+
+JSON does not like a comma after the last list or dictionary entry.
+
+>>> my_list = list(range(8))
+>>> my_list.append('whatever')
+>>> my_list.append('hello')
+>>> my_list.append({})
+>>> my_list[-1]
+{}
+>>> my_list[-1]['ip_addr'] = '10.10.10.239'
+>>> my_list[-1]['attribs'] = list(range(5))
+>>> json.dumps(my_list)
+'[0, 1, 2, 3, 4, 5, 6, 7, "whatever", "hello", {"ip_addr": "10.10.10.239", "attribs": [0, 1, 2, 3, 4]}]'
+>>> with open("my_file.json", "w") as f:
+...     json.dump(my_list, f)
+
+json.dumps is for String.
+
+json.dump is for creating file.
+
+>>> with open("my_file.json") as f:
+...     new_list = json.load(f)
+
