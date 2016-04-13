@@ -1,0 +1,97 @@
+Combinations of list and dictionaries, both embedded within one another, containing multiple types of variables.
+The transimission of these data structures to remote machines are needed, and could be sent to other devices
+written in other languages that will need to understand these.  So, the data structures need standardization.
+
+YAML is used extensively by Ansible.
+
+So, you can create a list of a multitude of varying items, including integers, strings, and even dictionaries,
+and dump that into a YAML file.
+
+yaml.dump(my_list)
+
+There are two ways that you can view YAML files, one is more condensed and the other more readible, and you can
+toggle between the two.
+
+yaml.dump(my_list, default_flow_style=True)	for the more condensed format.
+
+>>> yaml.dump(my_list)
+'- 0\n- 1\n- 2\n- 3\n- 4\n- 5\n- 6\n- 7\n- whatever\n- hello\n- attribs: [0, 1, 2, 3, 4, 5, 6, 7]\n  ip_addr: 10.10.10.239\n'
+>>> yaml.dump(my_list, default_flow_style=True)
+'[0, 1, 2, 3, 4, 5, 6, 7, whatever, hello, {attribs: [0, 1, 2, 3, 4, 5, 6, 7], ip_addr: 10.10.10.239}]\n'
+
+In Python, strings have quotes, but in YAML they do not.  It is ver similar.
+
+yaml.dump(my_list, default_flow_style=False)	for the more human-readible format.
+
+>>> yaml.dump(my_list, default_flow_style=False)
+'- 0\n- 1\n- 2\n- 3\n- 4\n- 5\n- 6\n- 7\n- whatever\n- hello\n- attribs:\n  - 0\n  - 1\n  - 2\n  - 3\n  - 4\n  - 5\n  - 6\n  - 7\n  ip_addr: 10.10.10.239\n'
+
+>>> print(yaml.dump(my_list, default_flow_style=False))
+- 0
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- whatever
+- hello
+- attribs:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  ip_addr: 10.10.10.239
+
+List elements indicated by a "-" and spacing and indentation matter in YAML.
+
+You can write out to a YAML file in Python, output is the same as above, although YAML is supposed to have three 
+hyphens at the tope of the file and Python does not seem to care.:
+
+>>> with open("some_file.yml", "w") as f:
+...    f.write(yaml.dump(my_list, default_flow_style=False))
+
+
+If we want to add values to the YAML file we can do that, adding the three hyphens up top helps, too:
+
+---
+- 0
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- whatever
+- hello
+- attribs:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  ip_addr: 10.10.10.239
+  some_key: hello
+  next_key: whatever
+
+>>> type(new_list)
+<class 'list'>
+
+>>> new_list[-1]
+{'ip_addr': '10.10.10.239', 'next_key': 'whatever', 'attribs': [0, 1, 2, 3, 4, 5, 6, 7], 'some_key': 'hello'}
+>>> type(new_list[-1])
+<class 'dict'>
+
+
+PYTHON2 >>> PYTHON3
+
+my_list = range(8)   >>>   my_list = list(range(8))
