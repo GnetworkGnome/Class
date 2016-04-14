@@ -2,7 +2,7 @@
 from ciscoconfparse import CiscoConfParse
 
 # Parse Configuration File
-cisco_config = CisconConfParse("cisco_ipsec.txt")
+cisco_config = CiscoConfParse("cisco_ipsec.txt")
 
 # Find Crypto Objects with Specific Children
 crypto_specific = cisco_config.find_objects_w_child(parentspec=r"^crypto map CRYPTO", childspec=r"set pfs group2")

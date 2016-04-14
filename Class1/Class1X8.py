@@ -2,7 +2,7 @@
 from ciscoconfparse import CiscoConfParse
 
 # Parse Configuration File
-cisco_config = CisconConfParse("cisco_ipsec.txt")
+cisco_config = CiscoConfParse("cisco_ipsec.txt")
 
 # Search for Crypto Objects
 crypto = cisco_config.find_objects(r"^crypto map CRYPTO")

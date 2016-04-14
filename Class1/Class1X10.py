@@ -2,7 +2,7 @@
 from ciscoconfparse import CiscoConfParse
 
 # Parse Configuration File
-cisco_config = CisconConfParse("cisco_ipsec.txt")
+cisco_config = CiscoConfParse("cisco_ipsec.txt")
 
 # Find Crypto Objects without Specific Children
 crypto_woaes = cisco_config.find_objects_wo_child(parentspec=r"^crypto map CRYPTO", childspec=r"set transform-set AES-SHA")
