@@ -1,0 +1,5 @@
+# Execution of Programs
+
+#!/usr/bin/env python
+chmod 755 <FILENAME>
+./<FILENAME>
