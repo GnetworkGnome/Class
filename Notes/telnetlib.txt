@@ -3,3 +3,13 @@
 #!/usr/bin/env python
 chmod 755 <FILENAME>
 ./<FILENAME>
+
+# TELNETLIB NOTES
+
+Connect via Telnet with parameters defined:
+remote_conn = telnetlib.Telnet(ip_addr, TELNET_PORT, TELNET_TIMEOUT)
+
+Read output from the Terminal, until string is found or timeout expires:
+output = remote_conn.read_until("sername:", TELNET_TIMEOUT)
+
+
