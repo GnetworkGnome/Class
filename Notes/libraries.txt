@@ -1,0 +1,15 @@
+# Notes on Python Libraries.
+
+Old way to install Libraries involved downloading, unzipping, untarring and installing.
+
+wget https://pypi.python.org/packages/source/p/pysnmp/pysnmp-4.2.5.tar.gz
+gunzip pysnmp-4.2.5.tar.gz
+tar -xvpf pysnmp-4.2.5.tar.gz
+cd pysnmp-4.2.5
+python setup.py install
+
+
+Better way to install things is via pip, which is a package manager.
+
+which pip			Shows if pip is installed.
+pip install pysnmp==4.2.5	Install a specific version, can do without.

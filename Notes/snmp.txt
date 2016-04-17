@@ -1,0 +1,67 @@
+# SNMP - Simple Network Management Protocol
+
+Note on Video:
+1. In the SNMP Example video, I use an IP address of 50.242.94.227 and the standard SNMP port (UDP 161). 
+This has changed, you will need to use an IP address of 50.76.53.27 and an SNMP port of UDP 7961 
+(or UDP 8061 for pynet-rtr2). For example, you can execute the snmpget as follows:
+
+$ snmpget -Os -c galileo -v 1 50.76.53.27:7961 1.3.6.1.2.1.1.1.0
+sysDescr.0 = STRING: Cisco IOS Software, C880 Software (C880DATA-UNIVERSALK9-M), Version 15.4(2)T1, RELEASE SOFTWARE (fc3)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2014 by Cisco Systems, Inc.
+Compiled Thu 26-Jun-14 14:15 by prod_rel_team
+
+SNMP is good for statistical information about devices.  It is not good for configuration changes.  Do not use
+SNMP as a configuration change mechanism.  
+
+Should be using SNMPv3, others are not secure.
+
+SNMP uses OIDs, a big string of numbers separated by periods with a heirarchy, specifying something on the device.
+
+If the OID has a single result, you need to append 0 onto the end of the string.  If the OID has many results,
+tabular data needs append a row data appended to the end.
+
+Management Information Base (MIB): A section of Objects grouped together with a human-readable name.  Use MIBs
+to hunt down the OIDs we are interested in and then hunt down the OIDs that we want.
+
+pysnmp and netsnmp are python-availble snmp libraries.  pysnmp is writeen entirely in python, so we will use that,
+netsnmp is written in C with hooks to help with python.  Using SNMP utilities from the linux command line to help
+you figure out what to use in your program.
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Finding OIDs, can use Cisco MIB browser so that we can query something.
+
+mib-2 is a standard MIB that all devices are supposed to support. 
+.iso(1).org(3).dod(6).internet(1).mgmt(2).mib-2(1).system(1).sysDescr(1)
+
+sysDescr
+1.3.6.1.2.1.1.1
+
+snmpget -v (1, 2c) -c <community_string) <IP Address> 1.3.6.1.2.1.1.1.0
+
+snmpwalk with same parameters will find all objects below in the heirarchy. 
+
+snmpwalk -Os -c <community_string> -v 1 <IP Address> 1.3.6.1.2.1.1
+
+
+Replicating this from a Python Interpreter perspective:
+
+from snmp_helper import snmp_get_oid, snmp_extract
+
+COMMUNITY_STRING = 'galileo'
+SNMP_PORT = 7961
+IP = '50.76.53.27'
+
+a_device = (IP, COMMUNITY_STRING, SNMP_PORT)
+
+OID = '1.3.6.1.2.1.1.1.0'
+
+snmmp_data = snmp_get_oid(a_device, oid=OID)
+
+output = snmp_extract(snmp_data)
+
+print(output)
+
+

@@ -12,4 +12,11 @@ remote_conn = telnetlib.Telnet(ip_addr, TELNET_PORT, TELNET_TIMEOUT)
 Read output from the Terminal, until string is found or timeout expires:
 output = remote_conn.read_until("sername:", TELNET_TIMEOUT)
 
+Writing commands to the Router is used with the following command:
+remote_conn.write(cmd + '\n')
 
+
+Many things you write that repeat should be made into functions.
+
+
+Example program is test_telnet.py for Class2.
